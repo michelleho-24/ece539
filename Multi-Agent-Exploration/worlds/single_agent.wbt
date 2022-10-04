@@ -1,15 +1,58 @@
 #VRML_SIM R2021b utf8
 WorldInfo {
+  basicTimeStep 8
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation -0.7 0.7 0.2 0.75
-  position 1.2 1.6 2.3
-
+  orientation 0.9465549530524401 0.2895233423085154 0.14216172167781005 5.284911304479378
+  position 0.10134596798331427 0.7110545081264651 0.3240857468235017
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 RectangleArena {
+  translation 0.020061 0 -0.416525
+  floorSize 1 1.4
+}
+Rock10cm {
+  translation -0.107508 0.05 -0.1229
+  name "rock 10 cm(5)"
+}
+Rock10cm {
+  translation -0.10171 0.05 -0.344291
+  rotation 0 1 0 1.0472
+  name "rock 10 cm(4)"
+}
+Rock10cm {
+  translation 0.0961944 0.05 -0.431613
+  rotation 0 1 0 2.0944
+  name "rock 10 cm(6)"
+}
+Rock10cm {
+  translation -0.0290082 0.05 -0.433378
+  rotation 0 1 0 2.618
+  name "rock 10 cm(7)"
+}
+Rock10cm {
+  translation 0.147471 0.05 -0.324343
+  rotation 0 1 0 2.35619
+}
+Rock10cm {
+  translation 0.136375 0.05 -0.216277
+  name "rock 10 cm(3)"
+}
+Rock10cm {
+  translation 0.122134 0.05 -0.103535
+  rotation 0 1 0 0.523599
+  name "rock 10 cm(1)"
+}
+Rock10cm {
+  translation -0.101076 0.05 -0.222749
+  name "rock 10 cm(2)"
+}
+Rovable {
+  translation 0.394943 0.011 -0.016935
+  rotation -0.5773509358554485 0.5773489358556708 0.5773509358554485 2.0944
+  controller "single_agent"
 }
