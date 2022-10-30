@@ -1,5 +1,5 @@
 # include <webots/robot.h>
-
+import igraph as ig
 
 tangential_speed = 0.12874
 robot_rotational_spteed = 0.772881647
