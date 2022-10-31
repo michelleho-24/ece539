@@ -4,8 +4,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation 0.9960557311935371 0.07937300788950073 0.03965987865691914 5.217605266146636
-  position -0.05193759060672011 1.4232333397007129 0.6896876366007996
+  orientation 0.8902032632505169 0.4334802824793924 0.14011778901951397 5.545433888107089
+  position -0.31503987885117474 1.0812605666061363 1.1088191341938973
 }
 TexturedBackground {
 }
@@ -15,39 +15,39 @@ RectangleArena {
   translation 0.020061 0 -0.416525
   floorSize 1 1.4
 }
-Rock10cm {
-  translation -0.107508 0.05 -0.1229
+DEF obs0 Rock10cm {
+  translation -0.117152 0.05 -0.0971121
   name "rock 10 cm(5)"
 }
-Rock10cm {
+DEF obs1 Rock10cm {
   translation -0.10171 0.05 -0.344291
   rotation 0 1 0 1.0472
   name "rock 10 cm(4)"
 }
-Rock10cm {
+DEF obs2 Rock10cm {
   translation 0.0961944 0.05 -0.431613
   rotation 0 1 0 2.0944
   name "rock 10 cm(6)"
 }
-Rock10cm {
+DEF obs3 Rock10cm {
   translation -0.0290082 0.05 -0.433378
   rotation 0 1 0 2.618
   name "rock 10 cm(7)"
 }
-Rock10cm {
+DEF obs4 Rock10cm {
   translation 0.147471 0.05 -0.324343
   rotation 0 1 0 2.35619
 }
-Rock10cm {
+DEF obs5 Rock10cm {
   translation 0.136375 0.05 -0.216277
   name "rock 10 cm(3)"
 }
-Rock10cm {
+DEF obs6 Rock10cm {
   translation 0.122134 0.05 -0.103535
   rotation 0 1 0 0.523599
   name "rock 10 cm(1)"
 }
-Rock10cm {
+DEF obs7 Rock10cm {
   translation -0.101076 0.05 -0.222749
   name "rock 10 cm(2)"
 }
