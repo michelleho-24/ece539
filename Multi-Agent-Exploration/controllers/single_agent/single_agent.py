@@ -11,7 +11,8 @@ import sys
 import platform
 import math
 import numpy as np
-#import igraph as ig
+import igraph as ig
+import pkg_resources
 
 from rrt_limited import rrt_limited
 from movement import Movement
@@ -22,8 +23,8 @@ num_obs = 8
 obs_size = 0.1 + 0.3 #size of obstacle in meters + footprint
 robot_footprint = 0.05 #Robot size is 0.03 x 0.02 meters, approximate as 0.05 m square
 sample_space = 0.25 #Space to be sample from the robot, radius of a circle in meters
-sample_period = 5
-sample_counter= 0
+sample_counter= 0 #Used to track the edge IDs
+curr_vertex="home" #Tracks the name of the current vertex 
 
 # create the Robot instance.
 robot = Supervisor()
@@ -43,45 +44,45 @@ motorR.setPosition(float('inf'))
 defVal="agent_1"
 obs_node_array = np.empty(num_obs, dtype=object)
 obs_pos_array = np.empty(num_obs, dtype=object)
+g = ig.Graph()
 
 agent_node = robot.getFromDef(defVal)
 trans_field = agent_node.getField("translation")
 trans_value = trans_field.getSFVec3f()
 compass.enable(8)
 gyro.enable(8)
-mvController = Movement(robot, motorL, motorR, compass, gyro)
-
-#Data logging variables
-robot_pos_log = []
 
 for i in range(num_obs):
     obs_node_array[i] = robot.getFromDef("obs" + str(i))
     obs_pos_array[i] = obs_node_array[i].getField("translation").getSFVec3f()
     obs_pos_array[i].append(obs_size)
-    print(obs_pos_array[i])
+    #print(obs_pos_array[i])
 
 rrt_planner = rrt_limited(obs_pos_array, sample_space)
+mvController = Movement(robot, motorL, motorR, compass, gyro)
+g.add_vertex(name="home", pos=trans_field.getSFVec3f()) #Add the home position, starting point
 
-destination=[0.249, -0.0579]
+#Data logging variables
+robot_pos_log = []
+
 print("Version: ", sys.version)
 
 while robot.step(timestep) != -1:
 
     #Update velocity after every simulation step
     curr_pos = trans_field.getSFVec3f()
-    print(curr_pos)
     robot_pos_log.append(curr_pos)
 
-    rrt_planner.sample_random(curr_pos)
+    sampled_point = rrt_planner.expand_rrt(curr_pos)
 
-    # #Perform outbound expansion
-    # graph_builder.outbound_expansion(curr_pos, sample_space) 
+    #Perform outbound expansion
+    g, curr_vertex, sample_counter = graph_builder.outbound_expansion(g, curr_vertex, sampled_point, sample_counter)
 
-    # #Move to newly sampled destination
-    # mvController.moveToDestination(destination, curr_pos)
+    #Move to newly sampled destination
+    mvController.moveToDestination(sampled_point, curr_pos)
 
-    # #Maintian safe recursive feasibility
-    # graph_builder.inbound_consolidation(curr_pos, sample_space) 
+    #Maintian safe recursive feasibility
+    #graph_builder.inbound_consolidation(curr_pos, sample_space) 
     
 
 # Enter here exit cleanup code.
@@ -94,4 +95,7 @@ with open('robot_pos.txt', 'w') as f:
     for line in robot_pos_log:
         f.write(f"{line}\n")
 f.close()
+
+ig.plot(g, target='myfile.pdf')
+
         

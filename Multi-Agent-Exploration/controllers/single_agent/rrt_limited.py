@@ -31,7 +31,7 @@ class rrt_limited:
 
     def sample_random_free(self, curr_pos):
         sample = self.sample_random(curr_pos)
-        while not (self.sample_free(sample)):
+        while not (self.check_free(sample)):
             sample = self.sample_random(curr_pos)
 
         return sample #returns a (x, y, z) value in webots space 
@@ -69,7 +69,7 @@ class rrt_limited:
             else: 
                 d = (np.abs((ABx)*(BEy)-(AEx)*(ABy))) / (np.sqrt(((ABx)**2)+((ABy)**2)))
             
-            if self.check_free(curr_pos, self.obstacles) & self.check_free(sampleB, self.obstacles):
+            if self.check_free(sampleB) and d > radius:
                 if d > radius:
                     flag = True 
         return flag

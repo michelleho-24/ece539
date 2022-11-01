@@ -1,11 +1,18 @@
 #VRML_SIM R2021b utf8
 WorldInfo {
+  CFM 0.2
+  ERP 0.1
   basicTimeStep 8
   coordinateSystem "NUE"
+  contactProperties [
+    ContactProperties {
+      material2 "WheelMat"
+    }
+  ]
 }
 Viewpoint {
-  orientation 0.8902032632505169 0.4334802824793924 0.14011778901951397 5.545433888107089
-  position -0.2305140143960013 1.0673000842405047 1.1497316824998547
+  orientation 0.9557273880855794 0.24722516358695132 0.1595771855639817 5.058022304836507
+  position -0.18208086336780213 1.89725764084186 0.6914231464133654
 }
 TexturedBackground {
 }
