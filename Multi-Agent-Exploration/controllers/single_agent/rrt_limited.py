@@ -8,8 +8,6 @@ class rrt_limited:
         self.sample_radius = sample_radius
 
     def sample_random(self, curr_pos): 
-        
-        print(curr_pos)
         # Using this: https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly
         r = self.sample_radius * math.sqrt(random.uniform(0,1))
         theta = random.uniform(0,1) * 2 * math.pi
@@ -17,7 +15,6 @@ class rrt_limited:
         y = curr_pos[2] + r * math.sin(theta)
         
         sample_point = np.array([x, curr_pos[1], y])
-        print(sample_point)
         return sample_point
     
     def check_free(self, sample):
@@ -37,6 +34,9 @@ class rrt_limited:
         return sample #returns a (x, y, z) value in webots space 
                 
     def edge_free(self, curr_pos, sampleB):
+        '''
+        Checks if the connecting edge between your current position and the sampled point do no collide with an obstacle
+        '''
         Ax = curr_pos[0]
         Ay = curr_pos[2]
         Bx = sampleB[0]
@@ -70,8 +70,8 @@ class rrt_limited:
                 d = (np.abs((ABx)*(BEy)-(AEx)*(ABy))) / (np.sqrt(((ABx)**2)+((ABy)**2)))
             
             if self.check_free(sampleB) and d > radius:
-                if d > radius:
-                    flag = True 
+                flag = True 
+
         return flag
 
     def expand_rrt(self, curr_pos):
@@ -80,4 +80,3 @@ class rrt_limited:
             proposed_sample = self.sample_random_free(curr_pos)
 
         return proposed_sample
-        

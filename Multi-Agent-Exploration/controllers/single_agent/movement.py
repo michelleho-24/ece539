@@ -1,4 +1,3 @@
-#LIBRARY IMPORTS
 from gettext import translation
 import math
 import numpy as np
@@ -14,10 +13,11 @@ class Movement:
         #DEFINED CONSTANTS
     COORDINATE_MATCHING_ACCURACY = 0.01
     THETA_MATCHING_ACCURACY = 1
-    # ANGULAR SPEED IN RADIANS 32778.0
-    ROBOT_ANGULAR_SPEED_IN_DEGREES = 32778.0 / 360
+    # ANGULAR SPEED IN RADIANS 1.3
+    ROBOT_ANGULAR_VELOCITY_IN_RADIANS = 2.92107753376862
+    ROBOT_ANGULAR_SPEED_IN_DEGREES = ROBOT_ANGULAR_VELOCITY_IN_RADIANS * (180/math.pi)
     #Linear velocity 0.0549999930
-    TANGENSIAL_SPEED = 0.128
+    TANGENSIAL_SPEED = 0.0549999930
     MAX_SPEED = 10
 
     def motorStop(self):
@@ -39,7 +39,7 @@ class Movement:
     def moveForward(self, distance):
         # the duration required for the robot to move by the specified distance
         duration = distance / self.TANGENSIAL_SPEED
-        print("duration to reach target location: %.5f\n", duration)
+        print("duration to reach target location: ", duration)
 
         #set robot motor to move forward
         self.motorMoveForward()
@@ -57,7 +57,7 @@ class Movement:
     def rotateHeading(self, thetaDot):
         if not (self.cartesianIsThetaEqual(thetaDot, 0)):
             duration = abs(thetaDot) / self.ROBOT_ANGULAR_SPEED_IN_DEGREES
-            print("duration to face the destination: %.5f\n", duration)
+            print("duration to face the destination: ", duration)
 
             #if thetaDot > 0, robot will rotate to left
             if (thetaDot > 0):
@@ -189,5 +189,3 @@ class Movement:
         
         currentCoordinate = self.positioningControllerGetRobotCoordinate(curr_pos)
         # print("Stop Coordinate: %.5f %.5f\n", currentCoordinate[0], currentCoordinate[1])
-
-
