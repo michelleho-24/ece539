@@ -39,7 +39,7 @@ class Movement:
     def moveForward(self, distance):
         # the duration required for the robot to move by the specified distance
         duration = distance / self.TANGENSIAL_SPEED
-        print("duration to reach target location: ", duration)
+        #print("duration to reach target location: ", duration)
 
         #set robot motor to move forward
         self.motorMoveForward()
@@ -57,7 +57,7 @@ class Movement:
     def rotateHeading(self, thetaDot):
         if not (self.cartesianIsThetaEqual(thetaDot, 0)):
             duration = abs(thetaDot) / self.ROBOT_ANGULAR_SPEED_IN_DEGREES
-            print("duration to face the destination: ", duration)
+            #print("duration to face the destination: ", duration)
 
             #if thetaDot > 0, robot will rotate to left
             if (thetaDot > 0):

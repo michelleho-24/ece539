@@ -13,6 +13,7 @@ import math
 import numpy as np
 import igraph as ig
 import pkg_resources
+import random
 
 from rrt_limited import rrt_limited
 from movement import Movement
@@ -23,7 +24,8 @@ num_obs = 8
 obs_size = 0.1 + 0.3 #size of obstacle in meters + footprint
 robot_footprint = 0.05 #Robot size is 0.03 x 0.02 meters, approximate as 0.05 m square
 sample_space = robot_footprint*2 #Space to be sample from the robot, radius of a circle in meters
-sample_counter= 0 #Used to track the edge IDs
+sample_counter= 1 #Used to track the edge IDs
+eps_inbound = 0.4
 # boundary_center = [0.0201, -0.417] # Size of arena is 1 x 1.4 (x,y) meters
 # arena_size = [1, 1.4]
 curr_vertex="home" #Tracks the name of the current vertex 
@@ -46,7 +48,8 @@ motorR.setPosition(float('inf'))
 defVal="agent_1"
 obs_node_array = np.empty(num_obs, dtype=object)
 obs_pos_array = np.empty(num_obs, dtype=object)
-g = ig.Graph()
+g_f = ig.Graph(directed=True)
+g_b = ig.Graph(directed=True)
 
 agent_node = robot.getFromDef(defVal)
 trans_field = agent_node.getField("translation")
@@ -69,33 +72,34 @@ boundary_dim[1] = boundary_dim[1] - 0.05
 rrt_planner = rrt_limited(obs_pos_array, sample_space, boundary_center, boundary_dim)
 mvController = Movement(robot, motorL, motorR, compass, gyro)
 
-g.add_vertex(name="home", pos=trans_field.getSFVec3f()) #Add the home position, starting point
-
+g_f.degree(mode="in")
+g_f.add_vertex(name="home", pos=trans_field.getSFVec3f()) #Add the home position, starting point
+print(g_f)
 #Data logging variables
 robot_pos_log = []
 
 print("Version: ", sys.version)
-curr_pos = trans_field.getSFVec3f()
-sampled_point = rrt_planner.expand_rrt(curr_pos)
-mvController.moveToDestination(sampled_point, curr_pos)
+# curr_pos = trans_field.getSFVec3f()
+# sampled_point = rrt_planner.expand_rrt(curr_pos)
+# mvController.moveToDestination(sampled_point, curr_pos)
 
 while robot.step(timestep) != -1:
 
-    # #Update velocity after every simulation step
-    
-    # robot_pos_log.append(curr_pos)
-
-   
+    curr_pos = trans_field.getSFVec3f()
+    sampled_point = rrt_planner.expand_rrt(curr_pos)
+    robot_pos_log.append(curr_pos)
 
     # #Perform outbound expansion
-    # g, curr_vertex, sample_counter = graph_builder.outbound_expansion(g, curr_vertex, sampled_point, sample_counter)
+    g_f, curr_vertex, sample_counter = graph_builder.outbound_expansion(g_f, curr_vertex, sampled_point, sample_counter)
 
     # #Move to newly sampled destination
-    
-
+    mvController.moveToDestination(sampled_point, curr_pos)
+    eps = random.uniform(0,1)
     # #Maintian safe recursive feasibility
-    # #graph_builder.inbound_consolidation(curr_pos, sample_space) 
-    pass
+    if eps < eps_inbound:
+        print("Inbound Consolidation")
+        g_f, g_b, curr_vertex = graph_builder.inbound_consolidation(curr_pos, g_f, g_b, curr_vertex, mvController) 
+    
     
 
 # Enter here exit cleanup code.
@@ -109,6 +113,6 @@ with open('robot_pos.txt', 'w') as f:
         f.write(f"{line}\n")
 f.close()
 
-ig.plot(g, target='myfile.pdf')
+ig.plot(g_f, target='myfile.pdf')
 
         
