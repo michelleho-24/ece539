@@ -24,6 +24,8 @@ obs_size = 0.1 + 0.3 #size of obstacle in meters + footprint
 robot_footprint = 0.05 #Robot size is 0.03 x 0.02 meters, approximate as 0.05 m square
 sample_space = 0.25 #Space to be sample from the robot, radius of a circle in meters
 sample_counter= 0 #Used to track the edge IDs
+# boundary_center = [0.0201, -0.417] # Size of arena is 1 x 1.4 (x,y) meters
+# arena_size = [1, 1.4]
 curr_vertex="home" #Tracks the name of the current vertex 
 
 # create the Robot instance.
@@ -58,8 +60,15 @@ for i in range(num_obs):
     obs_pos_array[i].append(obs_size)
     #print(obs_pos_array[i])
 
-rrt_planner = rrt_limited(obs_pos_array, sample_space)
+arena_node = robot.getFromDef("arena")
+boundary_center = arena_node.getField("translation").getSFVec3f()
+boundary_dim = arena_node.getField("floorSize").getSFVec2f()
+boundary_dim[0] = boundary_dim[0] - 0.05 
+boundary_dim[1] = boundary_dim[1] - 0.05 
+
+rrt_planner = rrt_limited(obs_pos_array, sample_space, boundary_center, boundary_dim)
 mvController = Movement(robot, motorL, motorR, compass, gyro)
+
 g.add_vertex(name="home", pos=trans_field.getSFVec3f()) #Add the home position, starting point
 
 #Data logging variables

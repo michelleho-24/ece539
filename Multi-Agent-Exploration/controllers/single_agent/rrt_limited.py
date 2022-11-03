@@ -3,9 +3,11 @@ import numpy as np
 import random
 
 class rrt_limited: 
-    def __init__(self, obstacles, sample_radius):
+    def __init__(self, obstacles, sample_radius, boundary_center, boundary_dim):
         self.obstacles = obstacles #Array of obstacles in format (x, y, z, r) treated as circles
         self.sample_radius = sample_radius
+        self.boundary_center = boundary_center
+        self.boundary_dim = boundary_dim
 
     def sample_random(self, curr_pos): 
         # Using this: https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly
@@ -18,13 +20,16 @@ class rrt_limited:
         return sample_point
     
     def check_free(self, sample):
-        flag = True
+        free = True
         for obs in self.obstacles:
             distance = np.sqrt(((sample[0]-obs[0])**2)+((sample[2]-obs[2])**2))
-            if distance <= obs[2]:
-                flag = False
+            if distance <= obs[2]: #Checks whether the point is inside an obstacle
+                free = False
                 break
-        return flag
+        if ((sample[0] < (self.boundary_center[0]-self.boundary_dim[0])) or (sample[0] > (self.boundary_center[0]+self.boundary_dim[0]))):
+            if ((sample[2] < (self.boundary_center[2]-self.boundary_dim[1])) or (sample[2] > (self.boundary_center[2]+self.boundary_dim[1]))):
+                free = False
+        return free
 
     def sample_random_free(self, curr_pos):
         sample = self.sample_random(curr_pos)
