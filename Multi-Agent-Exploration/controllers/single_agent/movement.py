@@ -162,11 +162,20 @@ class Movement:
         return self.cartesianCalcThetaDot(robotHeading, destinationTheta)
 
 
-
+    '''
+    Takes in destinationCoordinate = [x, y, z]
+    and curr_pos[x, z]
+    '''
     def moveToDestination(self, destinationCoordinate, curr_pos):
+        destinationCartesian = np.zeros(2)
+        destinationCartesian[0] = destinationCoordinate[0]
+        destinationCartesian[1] = -destinationCoordinate[2]
+        destinationCoordinate = destinationCartesian
+        
+
         currentCoordinate = self.positioningControllerGetRobotCoordinate(curr_pos)
-        # print("Initial Coordinate: {2.5f} {2.5f}\n".format(currentCoordinate[0], currentCoordinate[1]))
-        # print("Destination Coordinate: {2.5f} {2.5f}\n", destinationCoordinate[0], destinationCoordinate[1])
+        print("Initial Corodinate:", currentCoordinate)
+        print("Destination Coordinate: ", destinationCoordinate)
         
         # if the robot is already at the destination location
         if (self.cartesianIsCoordinateEqual(self.positioningControllerGetRobotCoordinate(curr_pos), destinationCoordinate)):

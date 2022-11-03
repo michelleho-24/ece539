@@ -26,8 +26,7 @@ class rrt_limited:
             if distance <= obs[2]: #Checks whether the point is inside an obstacle
                 free = False
                 break
-        if ((sample[0] < (self.boundary_center[0]-self.boundary_dim[0])) or (sample[0] > (self.boundary_center[0]+self.boundary_dim[0]))):
-            if ((sample[2] < (self.boundary_center[2]-self.boundary_dim[1])) or (sample[2] > (self.boundary_center[2]+self.boundary_dim[1]))):
+        if ((sample[0] < (self.boundary_center[0]-self.boundary_dim[0])) or (sample[0] > (self.boundary_center[0]+self.boundary_dim[0]))) or ((sample[2] < (self.boundary_center[2]-self.boundary_dim[1])) or (sample[2] > (self.boundary_center[2]+self.boundary_dim[1]))):
                 free = False
         return free
 

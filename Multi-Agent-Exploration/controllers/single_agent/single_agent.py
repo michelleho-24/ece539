@@ -22,7 +22,7 @@ num_robots = 1
 num_obs = 8
 obs_size = 0.1 + 0.3 #size of obstacle in meters + footprint
 robot_footprint = 0.05 #Robot size is 0.03 x 0.02 meters, approximate as 0.05 m square
-sample_space = 0.25 #Space to be sample from the robot, radius of a circle in meters
+sample_space = robot_footprint*2 #Space to be sample from the robot, radius of a circle in meters
 sample_counter= 0 #Used to track the edge IDs
 # boundary_center = [0.0201, -0.417] # Size of arena is 1 x 1.4 (x,y) meters
 # arena_size = [1, 1.4]
@@ -75,23 +75,27 @@ g.add_vertex(name="home", pos=trans_field.getSFVec3f()) #Add the home position, 
 robot_pos_log = []
 
 print("Version: ", sys.version)
+curr_pos = trans_field.getSFVec3f()
+sampled_point = rrt_planner.expand_rrt(curr_pos)
+mvController.moveToDestination(sampled_point, curr_pos)
 
 while robot.step(timestep) != -1:
 
-    #Update velocity after every simulation step
-    curr_pos = trans_field.getSFVec3f()
-    robot_pos_log.append(curr_pos)
+    # #Update velocity after every simulation step
+    
+    # robot_pos_log.append(curr_pos)
 
-    sampled_point = rrt_planner.expand_rrt(curr_pos)
+   
 
-    #Perform outbound expansion
-    g, curr_vertex, sample_counter = graph_builder.outbound_expansion(g, curr_vertex, sampled_point, sample_counter)
+    # #Perform outbound expansion
+    # g, curr_vertex, sample_counter = graph_builder.outbound_expansion(g, curr_vertex, sampled_point, sample_counter)
 
-    #Move to newly sampled destination
-    mvController.moveToDestination(sampled_point, curr_pos)
+    # #Move to newly sampled destination
+    
 
-    #Maintian safe recursive feasibility
-    #graph_builder.inbound_consolidation(curr_pos, sample_space) 
+    # #Maintian safe recursive feasibility
+    # #graph_builder.inbound_consolidation(curr_pos, sample_space) 
+    pass
     
 
 # Enter here exit cleanup code.
