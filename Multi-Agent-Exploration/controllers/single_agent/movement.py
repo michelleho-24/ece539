@@ -11,8 +11,9 @@ class Movement:
         self.compass = compass
         self.gyro = gyro
         #DEFINED CONSTANTS
+
     COORDINATE_MATCHING_ACCURACY = 0.01
-    THETA_MATCHING_ACCURACY = 1
+    THETA_MATCHING_ACCURACY = 5
     # ANGULAR SPEED IN RADIANS 1.3
     ROBOT_ANGULAR_VELOCITY_IN_RADIANS = 2.92107753376862
     ROBOT_ANGULAR_SPEED_IN_DEGREES = ROBOT_ANGULAR_VELOCITY_IN_RADIANS * (180/math.pi)
@@ -95,7 +96,6 @@ class Movement:
         heading = heading + 90
         if (heading > 360.0):
             heading = heading - 360.0
-
         return heading
 
 
@@ -120,7 +120,7 @@ class Movement:
             
     def get_bearing_in_degrees(self):
         north = self.compass.getValues()
-        rad = math.atan2(north[1], north[0])
+        rad = math.atan2(north[0], north[2]) #0, 2
         bearing = (rad - 1.5708) / math.pi * 180.0
         if (bearing < 0.0):
             bearing = bearing + 360.0
@@ -132,17 +132,19 @@ class Movement:
         return self.cartesianConvertCompassBearingToHeading(heading)
         
     def cartesianCalcDestinationThetaInDegrees(self, currentCoordinate,  destinationCoordinate):
+        #print("Destination Theta: ", math.atan2(destinationCoordinate[0] - currentCoordinate[0], destinationCoordinate[1] - currentCoordinate[1]) * 180 / math.pi)
+        #return math.atan2(destinationCoordinate[0] - currentCoordinate[0], destinationCoordinate[1] - currentCoordinate[1]) * 180 / math.pi
         return math.atan2(destinationCoordinate[1] - currentCoordinate[1], destinationCoordinate[0] - currentCoordinate[0]) * 180 / math.pi
 
 
     def cartesianCalcThetaDot(self, heading, destinationTheta):
-        theta_dot = destinationTheta - heading;
+        theta_dot = destinationTheta - heading
 
         if (theta_dot > 180):
             theta_dot = -(360-theta_dot)
         elif (theta_dot < -180):
             theta_dot = (360+theta_dot)
-
+        print(theta_dot)
         return theta_dot
 
     def cartesianCalcDistance(self, currentCoordinate, destinationCoordinate):
@@ -158,13 +160,14 @@ class Movement:
 
         currentCoordinate = self.positioningControllerGetRobotCoordinate(curr_pos)
         robotHeading = self.positioningControllerGetRobotHeading()
+        print("Robot Heading: ", robotHeading)
         destinationTheta = self.cartesianCalcDestinationThetaInDegrees(currentCoordinate, destinationCoordinate)
         return self.cartesianCalcThetaDot(robotHeading, destinationTheta)
 
 
     '''
     Takes in destinationCoordinate = [x, y, z]
-    and curr_pos[x, z]
+    and curr_pos[x, y, z]
     '''
     def moveToDestination(self, destinationCoordinate, curr_pos):
         destinationCartesian = np.zeros(2)
@@ -197,4 +200,5 @@ class Movement:
         self.moveForward(distanceToDestination)
         
         currentCoordinate = self.positioningControllerGetRobotCoordinate(curr_pos)
-        # print("Stop Coordinate: %.5f %.5f\n", currentCoordinate[0], currentCoordinate[1])
+        print("Final Corodinate:", currentCoordinate)
+        #print("Stop Coordinate: %.5f %.5f\n", currentCoordinate[0], currentCoordinate[1])

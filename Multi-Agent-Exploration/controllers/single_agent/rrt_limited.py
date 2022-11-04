@@ -1,6 +1,10 @@
 import math
 import numpy as np
 import random
+'''
+This class takes in the current position of the robot in [x, y, z] 
+and returns a coordinate in [x, y, z]
+'''
 
 class rrt_limited: 
     def __init__(self, obstacles, sample_radius, boundary_center, boundary_dim):
@@ -17,13 +21,14 @@ class rrt_limited:
         y = curr_pos[2] + r * math.sin(theta)
         
         sample_point = np.array([x, curr_pos[1], y])
+
         return sample_point
     
     def check_free(self, sample):
         free = True
         for obs in self.obstacles:
             distance = np.sqrt(((sample[0]-obs[0])**2)+((sample[2]-obs[2])**2))
-            if distance <= obs[2]: #Checks whether the point is inside an obstacle
+            if distance <= obs[3]: #Checks whether the point is inside an obstacle
                 free = False
                 break
         if ((sample[0] < (self.boundary_center[0]-self.boundary_dim[0])) or (sample[0] > (self.boundary_center[0]+self.boundary_dim[0]))) or ((sample[2] < (self.boundary_center[2]-self.boundary_dim[1])) or (sample[2] > (self.boundary_center[2]+self.boundary_dim[1]))):
@@ -43,8 +48,10 @@ class rrt_limited:
         '''
         Ax = curr_pos[0]
         Ay = curr_pos[2]
+        #print("Current Pos: ", Ax, Ay)
         Bx = sampleB[0]
         By = sampleB[2]
+        #print("Sampled Point: ", sampleB)
         flag = False
 
         for obstacle in self.obstacles:
@@ -74,13 +81,18 @@ class rrt_limited:
                 d = (np.abs((ABx)*(BEy)-(AEx)*(ABy))) / (np.sqrt(((ABx)**2)+((ABy)**2)))
             
             if self.check_free(sampleB) and d > radius:
-                flag = True 
-
+                flag = True
+            else:
+                # print("Sample intersecting wiht: ", sampleB)
+                # print(obstacle)
+                return False
         return flag
 
     def expand_rrt(self, curr_pos):
+        
         proposed_sample = self.sample_random_free(curr_pos)
         while not (self.edge_free(curr_pos, proposed_sample)):
             proposed_sample = self.sample_random_free(curr_pos)
-
+        
+        #print("Proposed Sample: ", proposed_sample)
         return proposed_sample
