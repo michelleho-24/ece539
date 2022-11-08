@@ -135,7 +135,7 @@ while robot.step(timestep) != -1:
             csvwriter.writerows(rrt_sample_log)
         f.close()
 
-        ig.plot(g_f, "forward.png")
+        #ig.plot(g_f, "forward.png")
 
         robot.simulationSetMode(robot.SIMULATION_MODE_PAUSE)
 
