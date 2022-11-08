@@ -1,0 +1,71 @@
+#VRML_SIM R2021b utf8
+WorldInfo {
+  CFM 0.2
+  ERP 0.1
+  basicTimeStep 8
+  coordinateSystem "NUE"
+  contactProperties [
+    ContactProperties {
+      material2 "WheelMat"
+    }
+  ]
+}
+Viewpoint {
+  orientation 0.9998207484060119 -0.012048846589824478 -0.014604668866399127 5.11123023919965
+  position -0.10526411825319923 1.8045973783078268 0.7648913353715568
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+DEF arena RectangleArena {
+  translation 0.020061 0 -0.416525
+  floorSize 1 1.4
+}
+DEF obs0 Rock10cm {
+  translation -0.117152 0.05 -0.0971121
+  name "rock 10 cm(5)"
+}
+DEF obs1 Rock10cm {
+  translation -0.10171 0.05 -0.344291
+  rotation 0 1 0 1.0472
+  name "rock 10 cm(4)"
+}
+DEF obs2 Rock10cm {
+  translation 0.0961944 0.05 -0.431613
+  rotation 0 1 0 2.0944
+  name "rock 10 cm(6)"
+}
+DEF obs3 Rock10cm {
+  translation -0.0290082 0.05 -0.433378
+  rotation 0 1 0 2.618
+  name "rock 10 cm(7)"
+}
+DEF obs4 Rock10cm {
+  translation 0.147471 0.05 -0.324343
+  rotation 0 1 0 2.35619
+}
+DEF obs5 Rock10cm {
+  translation 0.136375 0.05 -0.216277
+  name "rock 10 cm(3)"
+}
+DEF obs6 Rock10cm {
+  translation 0.122134 0.05 -0.103535
+  rotation 0 1 0 0.523599
+  name "rock 10 cm(1)"
+}
+DEF obs7 Rock10cm {
+  translation -0.101076 0.05 -0.222749
+  name "rock 10 cm(2)"
+}
+DEF agent_1 Rovable {
+  translation -0.229753 0.011 0.031428
+  rotation -0.5773509358554485 0.5773489358556708 0.5773509358554485 2.0944
+  controller "single_agent"
+  extensionSlot [
+    GPS {
+    }
+    Compass {
+    }
+  ]
+}
