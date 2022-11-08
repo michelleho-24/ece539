@@ -4,12 +4,13 @@ import numpy as np
 
 
 class Movement:
-    def __init__(self, robot, motorL, motorR, compass, gyro):
+    def __init__(self, robot, motorL, motorR, compass, gyro, imu):
         self.robot = robot
         self.motorL = motorL
         self.motorR = motorR
         self.compass = compass
         self.gyro = gyro
+        self.imu = imu 
         #DEFINED CONSTANTS
 
     COORDINATE_MATCHING_ACCURACY = 0.01
@@ -18,7 +19,7 @@ class Movement:
     ROBOT_ANGULAR_VELOCITY_IN_RADIANS = 2.92107753376862
     ROBOT_ANGULAR_SPEED_IN_DEGREES = ROBOT_ANGULAR_VELOCITY_IN_RADIANS * (180/math.pi)
     #Linear velocity 0.0549999930
-    TANGENSIAL_SPEED = 0.0549999930
+    TANGENSIAL_SPEED = 0.054999784124110815
     MAX_SPEED = 10
 
     def motorStop(self):
@@ -119,12 +120,15 @@ class Movement:
             return False
             
     def get_bearing_in_degrees(self):
-        north = self.compass.getValues()
-        rad = math.atan2(north[0], north[2]) #0, 2
-        bearing = (rad - 1.5708) / math.pi * 180.0
-        if (bearing < 0.0):
-            bearing = bearing + 360.0
-        return bearing
+        # north = self.compass.getValues()
+        rpy = self.imu.getRollPitchYaw()
+        north = rpy[2]
+        print("angle", north)
+        # rad = math.atan(north[0]/ north[2]) #0, 2
+        # bearing = (rad - 1.5708) / math.pi * 180.0
+        # if (bearing < 0.0):
+        #     bearing = bearing + 360.0
+        return north
 
 
     def positioningControllerGetRobotHeading(self):
@@ -133,18 +137,32 @@ class Movement:
         
     def cartesianCalcDestinationThetaInDegrees(self, currentCoordinate,  destinationCoordinate):
         #print("Destination Theta: ", math.atan2(destinationCoordinate[0] - currentCoordinate[0], destinationCoordinate[1] - currentCoordinate[1]) * 180 / math.pi)
-        #return math.atan2(destinationCoordinate[0] - currentCoordinate[0], destinationCoordinate[1] - currentCoordinate[1]) * 180 / math.pi
-        return math.atan2(destinationCoordinate[1] - currentCoordinate[1], destinationCoordinate[0] - currentCoordinate[0]) * 180 / math.pi
+        print("currentCoordinate", currentCoordinate)
+        print("destinationcoordinate", destinationCoordinate)
+
+        radians = math.atan((destinationCoordinate[0] - currentCoordinate[0]) / (destinationCoordinate[1] - currentCoordinate[1]))
+
+        print("tan radians", radians)
+
+        return radians * 180/math.pi
+        # print("radians", math.atan2(destinationCoordinate[0] - currentCoordinate[0], -(destinationCoordinate[1] - currentCoordinate[1])))
+
+       #  return math.atan2(destinationCoordinate[0] - currentCoordinate[0], -(destinationCoordinate[1] - currentCoordinate[1])) * 180 / math.pi
+        # return math.atan2(destinationCoordinate[1] - currentCoordinate[1], destinationCoordinate[0] - currentCoordinate[0]) * 180 / math.pi
 
 
     def cartesianCalcThetaDot(self, heading, destinationTheta):
+        # heading = 360
         theta_dot = destinationTheta - heading
+
+        print("heading", heading)
+        print("destination theta", destinationTheta)
 
         if (theta_dot > 180):
             theta_dot = -(360-theta_dot)
         elif (theta_dot < -180):
             theta_dot = (360+theta_dot)
-        print(theta_dot)
+        print("theta dot", theta_dot)
         return theta_dot
 
     def cartesianCalcDistance(self, currentCoordinate, destinationCoordinate):
