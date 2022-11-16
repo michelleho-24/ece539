@@ -12,7 +12,7 @@ import sys
 import platform
 import math
 import numpy as np
-import igraph as ig
+#import igraph as ig
 import pkg_resources
 import random
 import csv
@@ -52,14 +52,14 @@ motorR.setPosition(float('inf'))
 defVal="agent_1"
 obs_node_array = np.empty(num_obs, dtype=object)
 obs_pos_array = np.empty(num_obs, dtype=object)
-g_f = ig.Graph(directed=True)
-g_b = ig.Graph(directed=True)
+# g_f = ig.Graph(directed=True)
+# g_b = ig.Graph(directed=True)
 
 agent_node = robot.getFromDef(defVal)
 trans_field = agent_node.getField("translation")
 trans_value = trans_field.getSFVec3f()
 compass.enable(1)
-gyro.enable(8)
+gyro.enable(1)
 imu.enable(1)
 
 for i in range(num_obs):
@@ -80,9 +80,9 @@ print("Boundary Dimensions: ", boundary_dim)
 rrt_planner = rrt_limited(obs_pos_array, sample_space, boundary_center, boundary_dim)
 mvController = Movement(robot, motorL, motorR, compass, gyro, imu)
 
-g_f.degree(mode="in")
-g_f.add_vertex(name="home", pos=trans_field.getSFVec3f()) #Add the home position, starting point
-print(g_f)
+# g_f.degree(mode="in")
+# g_f.add_vertex(name="home", pos=trans_field.getSFVec3f()) #Add the home position, starting point
+# print(g_f)
 #Data logging variables
 robot_pos_log = []
 rrt_sample_log = []
@@ -97,15 +97,15 @@ print("Version: ", sys.version)
 # sampled_point = rrt_planner.expand_rrt(curr_pos)
 # mvController.moveToDestination(sampled_point, curr_pos
 
-#mvController.motorRotateLeft()
+mvController.motorRotateLeft()
 #mvController.motorMoveForward()
 sim_time = robot.getTime()
 # dest = [-0.00467573, 0.011, 0.15998]
 dest = [-0.23, 0.011, -0.219]
-mvController.moveToDestination(dest, trans_field.getSFVec3f())
+#mvController.moveToDestination(dest, trans_field.getSFVec3f())
 # mvController.motorMoveForward()
 while robot.step(timestep) != -1:
-    pass
+    print(mvController.get_bearing_in_degrees())
     # print(agent_node.getVelocity())
     # curr_pos = trans_field.getSFVec3f()
     # sampled_point = rrt_planner.expand_rrt(curr_pos)

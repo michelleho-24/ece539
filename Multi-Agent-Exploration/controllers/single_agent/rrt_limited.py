@@ -1,6 +1,7 @@
 import math
 import numpy as np
 import random
+import csv
 '''
 This class takes in the current position of the robot in [x, y, z] 
 and returns a coordinate in [x, y, z]
@@ -96,3 +97,26 @@ class rrt_limited:
         
         #print("Proposed Sample: ", proposed_sample)
         return proposed_sample
+
+    def rrt_iterate(self,start_pos):
+        # begin by get next point
+        new_sample = self.expand_rrt(start_pos)
+
+        # if next point is not in radius of the goal
+
+        rrt_sample_log = []
+        for i in range(1,10): 
+            new_sample =  self.expand_rrt(new_sample)
+            rrt_sample_log.append(new_sample)
+        
+        print(rrt_sample_log)
+        # Save experiment data
+        with open('rrt_sample.txt', 'w') as f:
+            # creating a csv writer object
+            csvwriter = csv.writer(f)
+
+            # writing the data rows``
+            csvwriter.writerows(rrt_sample_log)
+        f.close()
+
+  

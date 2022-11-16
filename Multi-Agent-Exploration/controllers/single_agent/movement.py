@@ -120,15 +120,15 @@ class Movement:
             return False
             
     def get_bearing_in_degrees(self):
-        # north = self.compass.getValues()
-        rpy = self.imu.getRollPitchYaw()
-        north = rpy[2]
-        print("angle", north)
-        # rad = math.atan(north[0]/ north[2]) #0, 2
-        # bearing = (rad - 1.5708) / math.pi * 180.0
-        # if (bearing < 0.0):
-        #     bearing = bearing + 360.0
-        return north
+        north = self.compass.getValues()
+        # rpy = self.imu.getRollPitchYaw()
+        # north = rpy[2]
+        # print("angle", north)
+        rad = math.atan(north[0]/ north[2]) #0, 2
+        bearing = (rad - 1.5708) / math.pi * 180.0
+        if (bearing < 0.0):
+            bearing = bearing + 360.0
+        return bearing
 
 
     def positioningControllerGetRobotHeading(self):

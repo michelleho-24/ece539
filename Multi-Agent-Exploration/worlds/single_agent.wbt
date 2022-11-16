@@ -63,6 +63,8 @@ DEF agent_1 Rovable {
   rotation -0.5773509358554485 0.5773489358556708 0.5773509358554485 2.0944
   controller "single_agent"
   extensionSlot [
+    InertialUnit {
+    }
     GPS {
     }
     Compass {
