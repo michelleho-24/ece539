@@ -79,26 +79,6 @@ class Movement:
                     self.robot.step(8)
 
     #motorR.setPosition(0.1)
-    # Main loop:
-    # - perform simulation steps until Webots is stopping the controller
-    def cartesianConvertCompassBearingToHeading(self, heading):
-        # /* 
-        # * in webots, heading increasement is rotate in clockwise
-        # * in cartesian, heading increasement is rotate in counterclockwise
-        # * so headingInCartesian = 360-headingInWebots
-        # * */
-        heading = 360-heading
-        
-        # /* 
-        # * in webots, heading is 0 if robot faced to y+ axis
-        # * in cartesian, heading is 0 if robot face to x+ axis
-        # * so headingInCartesian = headingInWebots+90
-        # * */
-        heading = heading + 90
-        if (heading > 360.0):
-            heading = heading - 360.0
-        return heading
-
 
     def positioningControllerGetRobotCoordinate(self, translation_array):
         position = np.zeros(2)
@@ -119,32 +99,42 @@ class Movement:
         else:
             return False
             
-    def get_bearing_in_degrees(self):
+    def get_heading(self):
         north = self.compass.getValues()
         # rpy = self.imu.getRollPitchYaw()
         # north = rpy[2]
         # print("angle", north)
-        rad = math.atan(north[0]/ north[2]) #0, 2
-        bearing = (rad - 1.5708) / math.pi * 180.0
-        if (bearing < 0.0):
-            bearing = bearing + 360.0
-        return bearing
+
+        heading = self.imu.getRollPitchYaw()[2]/math.pi * 180.0 - 90
+        if (heading < 0):
+            heading = heading + 360
+        #print("Heading: ", heading)
+
+        # rad = math.atan(north[2]/ north[0]) #0, 2
+        # # bearing = (rad - 1.5708) / math.pi * 180.0
+        # bearing = rad / math.pi * 180.0
+        # if (bearing < 0.0):
+        #     bearing = bearing + 180 #360
+        # print("Rad: ", rad)
+        return heading
 
 
     def positioningControllerGetRobotHeading(self):
         heading = self.get_bearing_in_degrees()
-        return self.cartesianConvertCompassBearingToHeading(heading)
+        return heading
+        #return self.cartesianConvertCompassBearingToHeading(heading)
         
     def cartesianCalcDestinationThetaInDegrees(self, currentCoordinate,  destinationCoordinate):
         #print("Destination Theta: ", math.atan2(destinationCoordinate[0] - currentCoordinate[0], destinationCoordinate[1] - currentCoordinate[1]) * 180 / math.pi)
         print("currentCoordinate", currentCoordinate)
         print("destinationcoordinate", destinationCoordinate)
 
-        radians = math.atan((destinationCoordinate[0] - currentCoordinate[0]) / (destinationCoordinate[1] - currentCoordinate[1]))
+        radians = math.atan((currentCoordinate[0] - destinationCoordinate[0] ) / (currentCoordinate[1] - destinationCoordinate[1] ))
+        radians = radians * 180/math.pi
 
-        print("tan radians", radians)
+        print("Target Angle in Degrees: ", radians)
 
-        return radians * 180/math.pi
+        return radians
         # print("radians", math.atan2(destinationCoordinate[0] - currentCoordinate[0], -(destinationCoordinate[1] - currentCoordinate[1])))
 
        #  return math.atan2(destinationCoordinate[0] - currentCoordinate[0], -(destinationCoordinate[1] - currentCoordinate[1])) * 180 / math.pi
@@ -177,7 +167,7 @@ class Movement:
     def positioningControllerCalcThetaDotToDestination(self, destinationCoordinate, curr_pos):
 
         currentCoordinate = self.positioningControllerGetRobotCoordinate(curr_pos)
-        robotHeading = self.positioningControllerGetRobotHeading()
+        robotHeading = self.get_heading()
         print("Robot Heading: ", robotHeading)
         destinationTheta = self.cartesianCalcDestinationThetaInDegrees(currentCoordinate, destinationCoordinate)
         return self.cartesianCalcThetaDot(robotHeading, destinationTheta)

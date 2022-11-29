@@ -61,28 +61,40 @@ class rrt_limited:
             radius = obstacle[3]
             
             # let E be the center of the obstacle 
-            AEx = h - Ax
-            AEy = h - Ay 
-            ABx = Bx - Ax
-            ABy = By - Ay
-            BEx = h - Bx
-            BEy = k - By
+            # AEx = h - Ax
+            # AEy = h - Ay 
+            # ABx = Bx - Ax
+            # ABy = By - Ay
+            # BEx = h - Bx
+            # BEy = k - By
             
-            AB_BE = ABx * BEx + ABy * BEy
-            AB_AE = ABx * AEx + ABy * AEy
+            # AB_BE = ABx * BEx + ABy * BEy
+            # AB_AE = ABx * AEx + ABy * AEy
             
-            # circle center closer to B 
-            if AB_BE < 0:
-                d = np.sqrt((k - By)**2 + (h - Bx)**2)
-            # circle center closer to A 
-            elif AB_AE < 0: 
-                d = np.sqrt((k - Ay)**2 + (h - Ax)**2)
-            # circle center in between A and B 
-            else: 
-                d = (np.abs((ABx)*(BEy)-(AEx)*(ABy))) / (np.sqrt(((ABx)**2)+((ABy)**2)))
+            # # circle center closer to B 
+            # if AB_BE < 0:
+            #     d = np.sqrt((k - By)**2 + (h - Bx)**2)
+            # # circle center closer to A 
+            # elif AB_AE < 0: 
+            #     d = np.sqrt((k - Ay)**2 + (h - Ax)**2)
+            # # circle center in between A and B 
+            # else: 
+                # d = (np.abs((ABx)*(BEy)-(AEx)*(ABy))) / (np.sqrt(((ABx)**2)+((ABy)**2)))
+            # d = (np.abs((ABx)*(AEy)-(ABy)*(AEx))) / (np.sqrt(((ABx)**2)+((ABy)**2)))
             
-            if self.check_free(sampleB) and d > radius:
-                flag = True
+            # if self.check_free(sampleB) and d > radius:
+            #     flag = True
+
+            u = ((h-Ax)*(Bx-Ax)+(k-Ay)*(By-Ay))/(((Ay-By)**2+(Ax-Bx)**2))
+
+            x = Ax + u *(Bx-Ax)
+            y = Ay + u *(By-Ay)
+            # take distance from point of intersection to obstacle center 
+            d = math.sqrt((y-k)**2+(x-h)**2)
+
+            if self.check_free(sampleB) and self.check_free(curr_pos):
+                if d > radius:
+                    flag = True
             else:
                 # print("Sample intersecting wiht: ", sampleB)
                 # print(obstacle)
@@ -105,13 +117,15 @@ class rrt_limited:
         # if next point is not in radius of the goal
 
         rrt_sample_log = []
-        for i in range(1,10): 
+        for i in range(1,20000): 
             new_sample =  self.expand_rrt(new_sample)
+            # new_sample =  self.expand_rrt(start_pos)
             rrt_sample_log.append(new_sample)
+
+        # print(rrt_sample_log)
         
-        print(rrt_sample_log)
         # Save experiment data
-        with open('rrt_sample.txt', 'w') as f:
+        with open('/Users/michelleho24/Documents/GitHub/ece539/Multi-Agent-Exploration/controllers/single_agent/rrt_sample.txt', 'w') as f:
             # creating a csv writer object
             csvwriter = csv.writer(f)
 
