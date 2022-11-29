@@ -26,7 +26,7 @@ ax.add_patch(obs8)
 x = []
 y = []
 count = 0
-f = open('/Users/darrenchiu/Documents/SeniorFall/SCRS/ece539/Multi-Agent-Exploration/controllers/single_agent/rrt_sample.txt', 'r')
+f = open('/Users/michelleho24/Documents/Github/ece539/Multi-Agent-Exploration/controllers/single_agent/rrt_sample.txt', 'r')
 
 while True:
     count += 1
@@ -54,7 +54,7 @@ print(len(y))
 print(y[0])
 
 
-plt.xlim([-1,1])
+plt.xlim([-1,2])
 plt.ylim([-1,2])
 
 fig.savefig('plot4.png')

@@ -13,6 +13,7 @@ class rrt_limited:
         self.sample_radius = sample_radius
         self.boundary_center = boundary_center
         self.boundary_dim = boundary_dim
+        random.seed(0)
 
     def sample_random(self, curr_pos): 
         # Using this: https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly
@@ -39,7 +40,7 @@ class rrt_limited:
         # if ((sample[0] < (self.boundary_center[0]-self.boundary_dim[0])) or (sample[0] > (self.boundary_center[0]+self.boundary_dim[0]))) or ((sample[2] < (self.boundary_center[2]-self.boundary_dim[1])) or (sample[2] > (self.boundary_center[2]+self.boundary_dim[1]))):
         
         
-        if (((sample[0]) < self.boundary_center[0]-self.boundary_dim[0]/2) or ((sample[0]) > self.boundary_center[0]+self.boundary_dim[0]/2) or ((sample[2]) > -self.boundary_center[2]+self.boundary_dim[1]/2) or ((sample[2]) < -self.boundary_center[2]-self.boundary_dim[1]/2)): 
+        if (((sample[0]) < self.boundary_center[0]-self.boundary_dim[0]/2) or ((sample[0]) > self.boundary_center[0]+self.boundary_dim[0]/2) or ((sample[2]) > self.boundary_center[2]+self.boundary_dim[1]/2) or ((sample[2]) < self.boundary_center[2]-self.boundary_dim[1]/2)): 
                 free = False
         return free
 

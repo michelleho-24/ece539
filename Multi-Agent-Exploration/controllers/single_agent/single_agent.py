@@ -71,8 +71,10 @@ for i in range(num_obs):
 arena_node = robot.getFromDef("arena")
 boundary_center = arena_node.getField("translation").getSFVec3f()
 boundary_dim = arena_node.getField("floorSize").getSFVec2f()
-boundary_dim[0] = boundary_dim[0] - 0.1
-boundary_dim[1] = boundary_dim[1] - 0.1
+# boundary_dim[0] = boundary_dim[0] - 0.1
+# boundary_dim[1] = boundary_dim[1] - 0.1
+boundary_dim[0] = boundary_dim[0] - 0.3
+boundary_dim[1] = boundary_dim[1] - 0.3
 
 print("Boundary Center: ", boundary_center)
 print("Boundary Dimensions: ", boundary_dim)
@@ -102,13 +104,13 @@ mvController.motorRotateLeft()
 sim_time = robot.getTime()
 # dest = [-0.00467573, 0.011, 0.15998]
 # dest = [-0.109, 0.0106, 0.00103]
-#dest = [-0.116, 0.011, 0.146]
+# dest = [-0.23, 0.011, -0.4314]
 #mvController.moveToDestination(dest, trans_field.getSFVec3f())
 #print(mvController.cartesianCalcDestinationThetaInDegrees(mvController.positioningControllerGetRobotCoordinate(trans_field.getSFVec3f()),  dest))
 # mvController.motorMoveForward()
 # mvController.moveToDestination(dest, trans_field.getSFVec3f())
 while robot.step(timestep) != -1:
-
+    
     curr_pos = trans_field.getSFVec3f()
     sampled_point = rrt_planner.expand_rrt(curr_pos)
 
@@ -123,32 +125,32 @@ while robot.step(timestep) != -1:
     mvController.moveToDestination(sampled_point, curr_pos)
     print("Destination: ", trans_field.getSFVec3f())
     eps = random.uniform(0,1)
-    # #Maintian safe recursive feasibility
+    # #Maintain safe recursive feasibility
     if eps < eps_inbound:
         print("Inbound Consolidation")
-        g_f, g_b, curr_vertex = graph_builder.inbound_consolidation(curr_pos, g_f, g_b, curr_vertex, mvController) 
+        g_f, g_b, curr_vertex = graph_builder.inbound_consolidation(g_f, g_b, curr_vertex, mvController, trans_field) 
     
-    if (robot.getTime() - sim_time > MAX_TIME):
-        # Save experiment data
-        with open('robot_pos.txt', 'w') as f:
-            # creating a csv writer object
-            csvwriter = csv.writer(f)
+    # if (robot.getTime() - sim_time > MAX_TIME):
+        # # Save experiment data
+        # with open('robot_pos.txt', 'w') as f:
+        #     # creating a csv writer object
+        #     csvwriter = csv.writer(f)
 
-            # writing the data rows``
-            csvwriter.writerows(robot_pos_log)
-        f.close()
+        #     # writing the data rows``
+        #     csvwriter.writerows(robot_pos_log)
+        # f.close()
 
-        with open('rrt_sample.txt', 'w') as f:
-            # creating a csv writer object
-            csvwriter = csv.writer(f)
+        # with open('rrt_sample.txt', 'w') as f:
+        #     # creating a csv writer object
+        #     csvwriter = csv.writer(f)
 
-            # writing the data rows``
-            csvwriter.writerows(rrt_sample_log)
-        f.close()
+        #     # writing the data rows``
+        #     csvwriter.writerows(rrt_sample_log)
+        # f.close()
 
-        #ig.plot(g_f, "forward.png")
+        # #ig.plot(g_f, "forward.png")
 
-        robot.simulationSetMode(robot.SIMULATION_MODE_PAUSE)
+        # robot.simulationSetMode(robot.SIMULATION_MODE_PAUSE)
 
 
 
