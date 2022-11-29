@@ -16,7 +16,7 @@ class Movement:
     COORDINATE_MATCHING_ACCURACY = 0.01
     THETA_MATCHING_ACCURACY = 5
     # ANGULAR SPEED IN RADIANS 1.3
-    ROBOT_ANGULAR_VELOCITY_IN_RADIANS = 2.92107753376862
+    ROBOT_ANGULAR_VELOCITY_IN_RADIANS = 2.57107753376862 #2.92107753376862
     ROBOT_ANGULAR_SPEED_IN_DEGREES = ROBOT_ANGULAR_VELOCITY_IN_RADIANS * (180/math.pi)
     #Linear velocity 0.0549999930
     TANGENSIAL_SPEED = 0.054999784124110815
@@ -77,6 +77,7 @@ class Movement:
                     if (self.robot.getTime() >= start_time + duration):
                         break
                     self.robot.step(8)
+            self.motorStop()
 
     #motorR.setPosition(0.1)
 
@@ -100,7 +101,7 @@ class Movement:
             return False
             
     def get_heading(self):
-        north = self.compass.getValues()
+        # north = self.compass.getValues()
         # rpy = self.imu.getRollPitchYaw()
         # north = rpy[2]
         # print("angle", north)
@@ -128,13 +129,30 @@ class Movement:
         #print("Destination Theta: ", math.atan2(destinationCoordinate[0] - currentCoordinate[0], destinationCoordinate[1] - currentCoordinate[1]) * 180 / math.pi)
         print("currentCoordinate", currentCoordinate)
         print("destinationcoordinate", destinationCoordinate)
+        a = [0, 0.5]
+        b = [destinationCoordinate[0] - currentCoordinate[0], destinationCoordinate[1] - currentCoordinate[1]]
+        print("A: " ,a)
+        print("B: ", b)
+        abdot = np.dot(a, b)
+        abmag = np.linalg.norm(a)*np.linalg.norm(b)
+        print("Dot a,b: ", np.dot(a, b))
+        print("Mag a,b: ", np.linalg.norm(a)*np.linalg.norm(b))
+        print("arccos: ", math.acos(abdot/abmag) * 180/math.pi)
+        # print("NEW THETA: ", math.acos(np.dot(a, b) / np.linalg.norm(a)*np.linalg.norm(b)) * 180/math.pi)
 
-        radians = math.atan((currentCoordinate[0] - destinationCoordinate[0] ) / (currentCoordinate[1] - destinationCoordinate[1] ))
-        radians = radians * 180/math.pi
+        # currentCoordinate [-0.229753 -0.031428]
+        # destinationcoordinate [-0.344, 0.0106, 0.0819]
+        # radians = math.atan((currentCoordinate[1] - destinationCoordinate[1] ) / (currentCoordinate[0] - destinationCoordinate[0] ))
+        # radians = radians * 180/math.pi
+        degrees =  math.acos(abdot / abmag) * 180/math.pi
+        if (destinationCoordinate[0] > currentCoordinate[0]):
+            degrees = -degrees
+        print("Destination Degree: ", degrees)
+        # if (radians < 0):
+        #     radians = radians + 360
+        # print("Target Angle: ", radians)
 
-        print("Target Angle in Degrees: ", radians)
-
-        return radians
+        return degrees
         # print("radians", math.atan2(destinationCoordinate[0] - currentCoordinate[0], -(destinationCoordinate[1] - currentCoordinate[1])))
 
        #  return math.atan2(destinationCoordinate[0] - currentCoordinate[0], -(destinationCoordinate[1] - currentCoordinate[1])) * 180 / math.pi
@@ -178,6 +196,7 @@ class Movement:
     and curr_pos[x, y, z]
     '''
     def moveToDestination(self, destinationCoordinate, curr_pos):
+        print(curr_pos)
         destinationCartesian = np.zeros(2)
         destinationCartesian[0] = destinationCoordinate[0]
         destinationCartesian[1] = -destinationCoordinate[2]
@@ -209,4 +228,6 @@ class Movement:
         
         currentCoordinate = self.positioningControllerGetRobotCoordinate(curr_pos)
         print("Final Corodinate:", currentCoordinate)
+
+        self.rotateHeading(-thetaDotToDestination)
         #print("Stop Coordinate: %.5f %.5f\n", currentCoordinate[0], currentCoordinate[1])

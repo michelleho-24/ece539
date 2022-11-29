@@ -101,16 +101,17 @@ mvController.motorRotateLeft()
 #mvController.motorMoveForward()
 sim_time = robot.getTime()
 # dest = [-0.00467573, 0.011, 0.15998]
-dest = [0.0161, 0.011, -0.0405]
+dest = [-0.109, 0.0106, 0.00103]
 #dest = [-0.116, 0.011, 0.146]
 #mvController.moveToDestination(dest, trans_field.getSFVec3f())
-print(mvController.cartesianCalcDestinationThetaInDegrees(mvController.positioningControllerGetRobotCoordinate(trans_field.getSFVec3f()),  dest))
+#print(mvController.cartesianCalcDestinationThetaInDegrees(mvController.positioningControllerGetRobotCoordinate(trans_field.getSFVec3f()),  dest))
 # mvController.motorMoveForward()
+mvController.moveToDestination(dest, trans_field.getSFVec3f())
 while robot.step(timestep) != -1:
-    yaw = imu.getRollPitchYaw()[2]/math.pi * 180.0 - 90
-    if (yaw < 0):
-        yaw = yaw + 360
-    print("Heading: ", yaw)
+    # yaw = imu.getRollPitchYaw()[2]/math.pi * 180.0 - 90
+    # if (yaw < 0):
+    #     yaw = yaw + 360
+    print("Heading: ", mvController.get_heading())
     #print(mvController.positioningControllerGetRobotHeading())
     # print(agent_node.getVelocity())
     # curr_pos = trans_field.getSFVec3f()
