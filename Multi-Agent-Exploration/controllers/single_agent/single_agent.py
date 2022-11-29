@@ -14,7 +14,7 @@ import sys
 import platform
 import math
 import numpy as np
-#import igraph as ig
+import igraph as ig
 import pkg_resources
 import random
 import csv
@@ -131,7 +131,7 @@ while robot.step(timestep) != -1:
     # #Maintain safe recursive feasibility
     if eps < eps_inbound:
         print("Inbound Consolidation")
-        # g_f, g_b, curr_vertex = graph_builder.inbound_consolidation(g_f, g_b, curr_vertex, mvController, trans_field) 
+        g_f, g_b, curr_vertex = graph_builder.inbound_consolidation(g_f, g_b, curr_vertex, mvController, trans_field) 
     
     # if (robot.getTime() - sim_time > MAX_TIME):
         # # Save experiment data

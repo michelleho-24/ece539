@@ -11,6 +11,7 @@ def outbound_expansion(g_f, curr_vertex, sampled_point, sample_counter):
     return g_f, curr_vertex, sample_counter
 
 def inbound_consolidation(g_f, g_b, curr_vertex, mvController, trans_field):
+    print("Finding path back home")
     backward_path = g_f.get_shortest_paths(curr_vertex, "home", mode="in", output='vpath')
     print("Path back home: ", backward_path)
 
