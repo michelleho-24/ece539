@@ -13,7 +13,7 @@ class rrt_limited:
         self.sample_radius = sample_radius
         self.boundary_center = boundary_center
         self.boundary_dim = boundary_dim
-        random.seed(0)
+        random.seed(5)
 
     def sample_random(self, curr_pos): 
         # Using this: https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly

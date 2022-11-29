@@ -11,8 +11,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.5863515544310975 -0.7161350326354191 -0.3786059556432026 4.831973732430889
-  position 0.5913706079250558 1.0960197578383755 0.23563488821138223
+  orientation 0.9999553338042176 -0.0026983950822918566 -0.009058093644662276 4.6250780941959855
+  position 0.24040847978468552 6.550478785826298 -0.5191835132339366
 }
 TexturedBackground {
 }
@@ -76,6 +76,7 @@ Robot {
   translation 0.01762 1.33227e-15 -0.40984
   children [
     Display {
+      rotation 0 1 0 3.14159
       children [
         DEF SHAPE Shape {
           appearance PBRAppearance {
@@ -95,7 +96,8 @@ Robot {
       ]
       name "ground_display"
       boundingObject USE SHAPE
-      height 90
+      width 128
+      height 128
     }
   ]
   controller "display_controller"
