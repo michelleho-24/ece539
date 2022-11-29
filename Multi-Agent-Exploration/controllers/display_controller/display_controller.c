@@ -57,12 +57,12 @@ int main() {
   // paint the display's background
   wb_display_set_color(ground_display, LIGHT_GRAY);
   wb_display_fill_rectangle(ground_display, 0, 0, width, height);
-  wb_display_set_color(ground_display, RED);
-  wb_display_draw_line(ground_display, 0, height / 2, width - 1, height / 2);
-  wb_display_draw_text(ground_display, "x", width - 10, height / 2 - 10);
-  wb_display_set_color(ground_display, BLUE);
-  wb_display_draw_line(ground_display, width / 2, 0, width / 2, height - 1);
-  wb_display_draw_text(ground_display, "z", width / 2 - 10, height - 10);
+  // wb_display_set_color(ground_display, RED);
+  // wb_display_draw_line(ground_display, 0, height / 2, width - 1, height / 2);
+  // wb_display_draw_text(ground_display, "x", width - 10, height / 2 - 10);
+  // wb_display_set_color(ground_display, BLUE);
+  // wb_display_draw_line(ground_display, width / 2, 0, width / 2, height - 1);
+  // wb_display_draw_text(ground_display, "z", width / 2 - 10, height - 10);
 
   // init a variable which counts the time steps
   int counter = 0;

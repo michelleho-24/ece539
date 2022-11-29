@@ -11,15 +11,15 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.004165914101186772 0.9981011374791372 0.06145538644052275 3.1777773571662578
-  position -0.37135205666435034 0.17600661974120715 -1.0181039179521538
+  orientation 0.5863515544310975 -0.7161350326354191 -0.3786059556432026 4.831973732430889
+  position 0.5913706079250558 1.0960197578383755 0.23563488821138223
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 DEF ARENA RectangleArena {
-  translation 0.020061 0 -0.416525
+  translation 0.020061 -0.01 -0.416525
   floorSize 1 1.4
 }
 DEF obs0 Rock10cm {
@@ -73,13 +73,29 @@ DEF agent_1 Rovable {
   ]
 }
 Robot {
-  translation 0.020061 0 -0.416525
+  translation 0.01762 1.33227e-15 -0.40984
   children [
     Display {
+      children [
+        DEF SHAPE Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url [
+                "https://raw.githubusercontent.com/cyberbotics/webots/R2021b/projects/samples/devices/worlds/textures/white256.png"
+              ]
+              filtering 0
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Plane {
+            size 1 1.4
+          }
+        }
+      ]
       name "ground_display"
-      boundingObject Box {
-        size 1 0.001 1.4
-      }
+      boundingObject USE SHAPE
+      height 90
     }
   ]
   controller "display_controller"

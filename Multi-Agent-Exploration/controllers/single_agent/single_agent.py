@@ -44,7 +44,6 @@ timestep = int(robot.getBasicTimeStep())
 motorL = robot.getDevice("left motor")
 motorR = robot.getDevice("right motor")
 
-display = Display("display")
 compass = Compass("compass")
 gyro = Gyro("gyro")
 imu = InertialUnit("inertial unit")
@@ -71,7 +70,7 @@ for i in range(num_obs):
     obs_pos_array[i].append(obs_size)
     #print(obs_pos_array[i])
 
-arena_node = robot.getFromDef("arena")
+arena_node = robot.getFromDef("ARENA")
 boundary_center = arena_node.getField("translation").getSFVec3f()
 boundary_dim = arena_node.getField("floorSize").getSFVec2f()
 # boundary_dim[0] = boundary_dim[0] - 0.1
@@ -111,7 +110,6 @@ sim_time = robot.getTime()
 #print(mvController.cartesianCalcDestinationThetaInDegrees(mvController.positioningControllerGetRobotCoordinate(trans_field.getSFVec3f()),  dest))
 # mvController.motorMoveForward()
 # mvController.moveToDestination(dest, trans_field.getSFVec3f())
-print(display.getWidth())
 while robot.step(timestep) != -1:
     
     curr_pos = trans_field.getSFVec3f()
