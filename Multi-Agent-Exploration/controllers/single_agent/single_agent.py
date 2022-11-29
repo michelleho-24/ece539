@@ -80,8 +80,8 @@ print("Boundary Dimensions: ", boundary_dim)
 rrt_planner = rrt_limited(obs_pos_array, sample_space, boundary_center, boundary_dim)
 mvController = Movement(robot, motorL, motorR, compass, gyro, imu)
 
-# g_f.degree(mode="in")
-# g_f.add_vertex(name="home", pos=trans_field.getSFVec3f()) #Add the home position, starting point
+g_f.degree(mode="in")
+g_f.add_vertex(name="home", pos=trans_field.getSFVec3f()) #Add the home position, starting point
 # print(g_f)
 #Data logging variables
 robot_pos_log = []
@@ -113,6 +113,7 @@ while robot.step(timestep) != -1:
     sampled_point = rrt_planner.expand_rrt(curr_pos)
 
     rrt_sample_log.append(sampled_point)
+    print("Sample point: ", sampled_point)
     robot_pos_log.append(curr_pos)
 
     # #Perform outbound expansion
@@ -120,6 +121,7 @@ while robot.step(timestep) != -1:
 
     # #Move to newly sampled destination
     mvController.moveToDestination(sampled_point, curr_pos)
+    print("Destination: ", trans_field.getSFVec3f())
     eps = random.uniform(0,1)
     # #Maintian safe recursive feasibility
     if eps < eps_inbound:

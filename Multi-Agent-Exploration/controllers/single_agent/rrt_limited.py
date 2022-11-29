@@ -27,12 +27,19 @@ class rrt_limited:
     
     def check_free(self, sample):
         free = True
+        # print(self.boundary_center[0]-self.boundary_dim[0])
+        # print(self.boundary_center[0]+self.boundary_dim[0])
+        # print(self.boundary_center[2]-self.boundary_dim[1])
+        # print(self.boundary_center[2]+self.boundary_dim[1])
         for obs in self.obstacles:
             distance = np.sqrt(((sample[0]-obs[0])**2)+((sample[2]-obs[2])**2))
             if distance <= obs[3]: #Checks whether the point is inside an obstacle
                 free = False
                 break
-        if ((sample[0] < (self.boundary_center[0]-self.boundary_dim[0])) or (sample[0] > (self.boundary_center[0]+self.boundary_dim[0]))) or ((sample[2] < (self.boundary_center[2]-self.boundary_dim[1])) or (sample[2] > (self.boundary_center[2]+self.boundary_dim[1]))):
+        # if ((sample[0] < (self.boundary_center[0]-self.boundary_dim[0])) or (sample[0] > (self.boundary_center[0]+self.boundary_dim[0]))) or ((sample[2] < (self.boundary_center[2]-self.boundary_dim[1])) or (sample[2] > (self.boundary_center[2]+self.boundary_dim[1]))):
+        
+        
+        if (((sample[0]) < self.boundary_center[0]-self.boundary_dim[0]/2) or ((sample[0]) > self.boundary_center[0]+self.boundary_dim[0]/2) or ((sample[2]) > -self.boundary_center[2]+self.boundary_dim[1]/2) or ((sample[2]) < -self.boundary_center[2]-self.boundary_dim[1]/2)): 
                 free = False
         return free
 

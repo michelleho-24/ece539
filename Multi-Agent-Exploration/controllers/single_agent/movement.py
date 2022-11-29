@@ -127,17 +127,17 @@ class Movement:
         
     def cartesianCalcDestinationThetaInDegrees(self, currentCoordinate,  destinationCoordinate):
         #print("Destination Theta: ", math.atan2(destinationCoordinate[0] - currentCoordinate[0], destinationCoordinate[1] - currentCoordinate[1]) * 180 / math.pi)
-        print("currentCoordinate", currentCoordinate)
-        print("destinationcoordinate", destinationCoordinate)
+        # print("currentCoordinate", currentCoordinate)
+        # print("destinationcoordinate", destinationCoordinate)
         a = [0, 0.5]
         b = [destinationCoordinate[0] - currentCoordinate[0], destinationCoordinate[1] - currentCoordinate[1]]
-        print("A: " ,a)
-        print("B: ", b)
+        # print("A: " ,a)
+        # print("B: ", b)
         abdot = np.dot(a, b)
         abmag = np.linalg.norm(a)*np.linalg.norm(b)
-        print("Dot a,b: ", np.dot(a, b))
-        print("Mag a,b: ", np.linalg.norm(a)*np.linalg.norm(b))
-        print("arccos: ", math.acos(abdot/abmag) * 180/math.pi)
+        # print("Dot a,b: ", np.dot(a, b))
+        # print("Mag a,b: ", np.linalg.norm(a)*np.linalg.norm(b))
+        # print("arccos: ", math.acos(abdot/abmag) * 180/math.pi)
         # print("NEW THETA: ", math.acos(np.dot(a, b) / np.linalg.norm(a)*np.linalg.norm(b)) * 180/math.pi)
 
         # currentCoordinate [-0.229753 -0.031428]
@@ -147,7 +147,7 @@ class Movement:
         degrees =  math.acos(abdot / abmag) * 180/math.pi
         if (destinationCoordinate[0] > currentCoordinate[0]):
             degrees = -degrees
-        print("Destination Degree: ", degrees)
+        # print("Destination Degree: ", degrees)
         # if (radians < 0):
         #     radians = radians + 360
         # print("Target Angle: ", radians)
@@ -163,14 +163,14 @@ class Movement:
         # heading = 360
         theta_dot = destinationTheta - heading
 
-        print("heading", heading)
-        print("destination theta", destinationTheta)
+        # print("heading", heading)
+        # print("destination theta", destinationTheta)
 
         if (theta_dot > 180):
             theta_dot = -(360-theta_dot)
         elif (theta_dot < -180):
             theta_dot = (360+theta_dot)
-        print("theta dot", theta_dot)
+        # print("theta dot", theta_dot)
         return theta_dot
 
     def cartesianCalcDistance(self, currentCoordinate, destinationCoordinate):
@@ -186,7 +186,7 @@ class Movement:
 
         currentCoordinate = self.positioningControllerGetRobotCoordinate(curr_pos)
         robotHeading = self.get_heading()
-        print("Robot Heading: ", robotHeading)
+        # print("Robot Heading: ", robotHeading)
         destinationTheta = self.cartesianCalcDestinationThetaInDegrees(currentCoordinate, destinationCoordinate)
         return self.cartesianCalcThetaDot(robotHeading, destinationTheta)
 
@@ -204,8 +204,8 @@ class Movement:
         
 
         currentCoordinate = self.positioningControllerGetRobotCoordinate(curr_pos)
-        print("Initial Corodinate:", currentCoordinate)
-        print("Destination Coordinate: ", destinationCoordinate)
+        # print("Initial Coordinate:", currentCoordinate)
+        # print("Destination Coordinate: ", destinationCoordinate)
         
         # if the robot is already at the destination location
         if (self.cartesianIsCoordinateEqual(self.positioningControllerGetRobotCoordinate(curr_pos), destinationCoordinate)):
@@ -226,8 +226,8 @@ class Movement:
         
         self.moveForward(distanceToDestination)
         
-        currentCoordinate = self.positioningControllerGetRobotCoordinate(curr_pos)
-        print("Final Corodinate:", currentCoordinate)
+        # currentCoordinate = self.positioningControllerGetRobotCoordinate(curr_pos)
+        # print("Final Coordinate:", currentCoordinate)
 
         self.rotateHeading(-thetaDotToDestination)
         #print("Stop Coordinate: %.5f %.5f\n", currentCoordinate[0], currentCoordinate[1])
