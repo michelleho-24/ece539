@@ -11,8 +11,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.8460046784712644 0.46232891900816686 0.2655711856611569 5.067668334894875
-  position -0.4320285754310704 0.6334613037733854 0.37774073407435615
+  orientation 0.25961325691420095 0.9614884976782403 0.0902265241868572 5.527296814325237
+  position -1.8310980159712624 0.6391186925116206 2.869124429602275
 }
 TexturedBackground {
 }
@@ -71,4 +71,18 @@ DEF agent_1 Rovable {
       rotation 0.577349935856137 -0.577349935856137 -0.5773509358560258 2.0944
     }
   ]
+}
+Robot {
+  translation 0.020061 0 -0.416525
+  children [
+    Display {
+      translation 0 -0.3 0
+      name "ground_display"
+      boundingObject Box {
+        size 1 0.1 1.4
+      }
+    }
+  ]
+  controller "display_controller"
+  supervisor TRUE
 }

@@ -8,11 +8,13 @@ from controller import Compass
 from controller import Gyro
 from controller import InertialUnit
 
+from controller import Display
+
 import sys
 import platform
 import math
 import numpy as np
-import igraph as ig
+#import igraph as ig
 import pkg_resources
 import random
 import csv
@@ -42,6 +44,7 @@ timestep = int(robot.getBasicTimeStep())
 motorL = robot.getDevice("left motor")
 motorR = robot.getDevice("right motor")
 
+display = Display("display")
 compass = Compass("compass")
 gyro = Gyro("gyro")
 imu = InertialUnit("inertial unit")
@@ -52,8 +55,8 @@ motorR.setPosition(float('inf'))
 defVal="agent_1"
 obs_node_array = np.empty(num_obs, dtype=object)
 obs_pos_array = np.empty(num_obs, dtype=object)
-g_f = ig.Graph(directed=True)
-g_b = ig.Graph(directed=True)
+# g_f = ig.Graph(directed=True)
+# g_b = ig.Graph(directed=True)
 
 agent_node = robot.getFromDef(defVal)
 trans_field = agent_node.getField("translation")
@@ -82,8 +85,8 @@ print("Boundary Dimensions: ", boundary_dim)
 rrt_planner = rrt_limited(obs_pos_array, sample_space, boundary_center, boundary_dim)
 mvController = Movement(robot, motorL, motorR, compass, gyro, imu)
 
-g_f.degree(mode="in")
-g_f.add_vertex(name="home", pos=trans_field.getSFVec3f()) #Add the home position, starting point
+# g_f.degree(mode="in")
+# g_f.add_vertex(name="home", pos=trans_field.getSFVec3f()) #Add the home position, starting point
 # print(g_f)
 #Data logging variables
 robot_pos_log = []
@@ -98,7 +101,6 @@ print("Version: ", sys.version)
 # curr_pos = trans_field.getSFVec3f()
 # sampled_point = rrt_planner.expand_rrt(curr_pos)
 # mvController.moveToDestination(sampled_point, curr_pos
-
 mvController.motorRotateLeft()
 #mvController.motorMoveForward()
 sim_time = robot.getTime()
@@ -109,6 +111,7 @@ sim_time = robot.getTime()
 #print(mvController.cartesianCalcDestinationThetaInDegrees(mvController.positioningControllerGetRobotCoordinate(trans_field.getSFVec3f()),  dest))
 # mvController.motorMoveForward()
 # mvController.moveToDestination(dest, trans_field.getSFVec3f())
+print(display.getWidth())
 while robot.step(timestep) != -1:
     
     curr_pos = trans_field.getSFVec3f()
@@ -119,7 +122,7 @@ while robot.step(timestep) != -1:
     robot_pos_log.append(curr_pos)
 
     # #Perform outbound expansion
-    g_f, curr_vertex, sample_counter = graph_builder.outbound_expansion(g_f, curr_vertex, sampled_point, sample_counter)
+    # g_f, curr_vertex, sample_counter = graph_builder.outbound_expansion(g_f, curr_vertex, sampled_point, sample_counter)
 
     # #Move to newly sampled destination
     mvController.moveToDestination(sampled_point, curr_pos)
@@ -128,7 +131,7 @@ while robot.step(timestep) != -1:
     # #Maintain safe recursive feasibility
     if eps < eps_inbound:
         print("Inbound Consolidation")
-        g_f, g_b, curr_vertex = graph_builder.inbound_consolidation(g_f, g_b, curr_vertex, mvController, trans_field) 
+        # g_f, g_b, curr_vertex = graph_builder.inbound_consolidation(g_f, g_b, curr_vertex, mvController, trans_field) 
     
     # if (robot.getTime() - sim_time > MAX_TIME):
         # # Save experiment data
