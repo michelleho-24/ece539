@@ -55,8 +55,8 @@ motorR.setPosition(float('inf'))
 defVal="agent_1"
 obs_node_array = np.empty(num_obs, dtype=object)
 obs_pos_array = np.empty(num_obs, dtype=object)
-# g_f = ig.Graph(directed=True)
-# g_b = ig.Graph(directed=True)
+g_f = ig.Graph(directed=True)
+g_b = ig.Graph(directed=True)
 
 agent_node = robot.getFromDef(defVal)
 trans_field = agent_node.getField("translation")
@@ -85,8 +85,8 @@ print("Boundary Dimensions: ", boundary_dim)
 rrt_planner = rrt_limited(obs_pos_array, sample_space, boundary_center, boundary_dim)
 mvController = Movement(robot, motorL, motorR, compass, gyro, imu)
 
-# g_f.degree(mode="in")
-# g_f.add_vertex(name="home", pos=trans_field.getSFVec3f()) #Add the home position, starting point
+g_f.degree(mode="in")
+g_f.add_vertex(name="home", pos=trans_field.getSFVec3f()) #Add the home position, starting point
 # print(g_f)
 #Data logging variables
 robot_pos_log = []
@@ -121,8 +121,8 @@ while robot.step(timestep) != -1:
     print("Sample point: ", sampled_point)
     robot_pos_log.append(curr_pos)
 
-    # #Perform outbound expansion
-    # g_f, curr_vertex, sample_counter = graph_builder.outbound_expansion(g_f, curr_vertex, sampled_point, sample_counter)
+    # #Perform outb ound expansion
+    g_f, curr_vertex, sample_counter = graph_builder.outbound_expansion(g_f, curr_vertex, sampled_point, sample_counter)
 
     # #Move to newly sampled destination
     mvController.moveToDestination(sampled_point, curr_pos)

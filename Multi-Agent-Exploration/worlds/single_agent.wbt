@@ -11,14 +11,14 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.25961325691420095 0.9614884976782403 0.0902265241868572 5.527296814325237
-  position -1.8310980159712624 0.6391186925116206 2.869124429602275
+  orientation 0.004165914101186772 0.9981011374791372 0.06145538644052275 3.1777773571662578
+  position -0.37135205666435034 0.17600661974120715 -1.0181039179521538
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
-DEF arena RectangleArena {
+DEF ARENA RectangleArena {
   translation 0.020061 0 -0.416525
   floorSize 1 1.4
 }
@@ -76,10 +76,9 @@ Robot {
   translation 0.020061 0 -0.416525
   children [
     Display {
-      translation 0 -0.3 0
       name "ground_display"
       boundingObject Box {
-        size 1 0.1 1.4
+        size 1 0.001 1.4
       }
     }
   ]
