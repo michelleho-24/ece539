@@ -45,7 +45,7 @@ print("Display Height: ", display_height)
 while robot.step(timestep) != -1:
     curr_pos = tracker.getSFVec3f()
 
-    plot_pos = [((math.fabs(curr_pos[0]-BR[0]))/boundary_dim[0])*display_width, ((math.fabs(curr_pos[2]-BR[0]))/boundary_dim[0])*display_height]
+    plot_pos = [((math.fabs(curr_pos[0]-BR[0]))/boundary_dim[0])*display_width, ((math.fabs(-curr_pos[2]-BR[1]))/boundary_dim[1])*display_height]
     # print(plot_pos)
     # print(int(plot_pos[0]), int(plot_pos[1]))
     display.setColor(GREEN)

@@ -31,8 +31,7 @@ sample_space = robot_footprint*1.25 #Space to be sample from the robot, radius o
 sample_counter= 1 #Used to track the edge IDs
 eps_inbound = 0.4
 MAX_TIME = 60 #900seconds = 15min
-# boundary_center = [0.0201, -0.417] # Size of arena is 1 x 1.4 (x,y) meters
-# arena_size = [1, 1.4]
+
 curr_vertex="home" #Tracks the name of the current vertex 
 
 # create the Robot instance.
@@ -44,6 +43,12 @@ timestep = int(robot.getBasicTimeStep())
 motorL = robot.getDevice("left motor")
 motorR = robot.getDevice("right motor")
 
+lDist = robot.getDevice("left distance sensor")
+rDist = robot.getDevice("right distance sensor")
+
+lDist.enable(timestep)
+rDist.enable(timestep)
+
 compass = Compass("compass")
 gyro = Gyro("gyro")
 imu = InertialUnit("inertial unit")
@@ -51,7 +56,9 @@ imu = InertialUnit("inertial unit")
 motorL.setPosition(float('inf'))
 motorR.setPosition(float('inf'))
 
-defVal="agent_1"
+defVal="agent_" + sys.argv[1]
+print(defVal)
+
 obs_node_array = np.empty(num_obs, dtype=object)
 obs_pos_array = np.empty(num_obs, dtype=object)
 g_f = ig.Graph(directed=True)
@@ -68,13 +75,11 @@ for i in range(num_obs):
     obs_node_array[i] = robot.getFromDef("obs" + str(i))
     obs_pos_array[i] = obs_node_array[i].getField("translation").getSFVec3f()
     obs_pos_array[i].append(obs_size)
-    #print(obs_pos_array[i])
+
 
 arena_node = robot.getFromDef("ARENA")
 boundary_center = arena_node.getField("translation").getSFVec3f()
 boundary_dim = arena_node.getField("floorSize").getSFVec2f()
-# boundary_dim[0] = boundary_dim[0] - 0.1
-# boundary_dim[1] = boundary_dim[1] - 0.1
 boundary_dim[0] = boundary_dim[0] - 0.3
 boundary_dim[1] = boundary_dim[1] - 0.3
 
@@ -82,34 +87,19 @@ print("Boundary Center: ", boundary_center)
 print("Boundary Dimensions: ", boundary_dim)
 
 rrt_planner = rrt_limited(obs_pos_array, sample_space, boundary_center, boundary_dim)
-mvController = Movement(robot, motorL, motorR, compass, gyro, imu)
+mvController = Movement(robot, agent_node, motorL, motorR, compass, gyro, imu, lDist, rDist)
 
 g_f.degree(mode="in")
 g_f.add_vertex(name="home", pos=trans_field.getSFVec3f()) #Add the home position, starting point
-# print(g_f)
+
 #Data logging variables
 robot_pos_log = []
 rrt_sample_log = []
 
-# with open('obs_pos.txt', 'w') as f:
-#     for line in obs_pos_array:
-#         f.write(f"{line}\n")
-# f.close()
-
 print("Version: ", sys.version)
-# curr_pos = trans_field.getSFVec3f()
-# sampled_point = rrt_planner.expand_rrt(curr_pos)
-# mvController.moveToDestination(sampled_point, curr_pos
-mvController.motorRotateLeft()
-#mvController.motorMoveForward()
+
 sim_time = robot.getTime()
-# dest = [-0.00467573, 0.011, 0.15998]
-# dest = [-0.109, 0.0106, 0.00103]
-# dest = [-0.23, 0.011, -0.4314]
-#mvController.moveToDestination(dest, trans_field.getSFVec3f())
-#print(mvController.cartesianCalcDestinationThetaInDegrees(mvController.positioningControllerGetRobotCoordinate(trans_field.getSFVec3f()),  dest))
-# mvController.motorMoveForward()
-# mvController.moveToDestination(dest, trans_field.getSFVec3f())
+
 while robot.step(timestep) != -1:
     
     curr_pos = trans_field.getSFVec3f()
@@ -131,27 +121,27 @@ while robot.step(timestep) != -1:
         print("Inbound Consolidation")
         g_f, g_b, curr_vertex = graph_builder.inbound_consolidation(g_f, g_b, curr_vertex, mvController, trans_field) 
     
-    # if (robot.getTime() - sim_time > MAX_TIME):
-        # # Save experiment data
-        # with open('robot_pos.txt', 'w') as f:
-        #     # creating a csv writer object
-        #     csvwriter = csv.writer(f)
+    if (robot.getTime() - sim_time > MAX_TIME):
+        # Save experiment data
+        with open('robot_pos.txt', 'w') as f:
+            # creating a csv writer object
+            csvwriter = csv.writer(f)
 
-        #     # writing the data rows``
-        #     csvwriter.writerows(robot_pos_log)
-        # f.close()
+            # writing the data rows``
+            csvwriter.writerows(robot_pos_log)
+        f.close()
 
-        # with open('rrt_sample.txt', 'w') as f:
-        #     # creating a csv writer object
-        #     csvwriter = csv.writer(f)
+        with open('rrt_sample.txt', 'w') as f:
+            # creating a csv writer object
+            csvwriter = csv.writer(f)
 
-        #     # writing the data rows``
-        #     csvwriter.writerows(rrt_sample_log)
-        # f.close()
+            # writing the data rows``
+            csvwriter.writerows(rrt_sample_log)
+        f.close()
 
-        # #ig.plot(g_f, "forward.png")
+        #ig.plot(g_f, "forward.png")
 
-        # robot.simulationSetMode(robot.SIMULATION_MODE_PAUSE)
+        robot.simulationSetMode(robot.SIMULATION_MODE_PAUSE)
 
 
 

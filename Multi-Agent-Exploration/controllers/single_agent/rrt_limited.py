@@ -13,7 +13,7 @@ class rrt_limited:
         self.sample_radius = sample_radius
         self.boundary_center = boundary_center
         self.boundary_dim = boundary_dim
-        random.seed(5)
+        random.seed(0)
 
     def sample_random(self, curr_pos): 
         # Using this: https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly
@@ -48,6 +48,7 @@ class rrt_limited:
         sample = self.sample_random(curr_pos)
         while not (self.check_free(sample)):
             sample = self.sample_random(curr_pos)
+            # print("not free")
 
         return sample #returns a (x, y, z) value in webots space 
                 

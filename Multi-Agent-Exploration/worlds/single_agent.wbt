@@ -11,8 +11,9 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.9999553338042176 -0.0026983950822918566 -0.009058093644662276 4.6250780941959855
-  position 0.24040847978468552 6.550478785826298 -0.5191835132339366
+  orientation 0.8430565641314377 0.5050945752560834 0.18475686650777493 5.432644434827159
+  position -0.3634668992421042 1.2167404072632921 1.217791690773394
+  follow "Rovable"
 }
 TexturedBackground {
 }
@@ -23,45 +24,66 @@ DEF ARENA RectangleArena {
   floorSize 1 1.4
 }
 DEF obs0 Rock10cm {
-  translation -0.117152 0.05 -0.0971121
+  translation -0.193531 0.05 -0.108243
   name "rock 10 cm(5)"
 }
 DEF obs1 Rock10cm {
-  translation -0.10171 0.05 -0.344291
+  translation -0.155058 0.05 -0.35874
   rotation 0 1 0 1.0472
   name "rock 10 cm(4)"
 }
 DEF obs2 Rock10cm {
-  translation 0.0961944 0.05 -0.431613
+  translation 0.0404987 0.05 -0.481138
   rotation 0 1 0 2.0944
   name "rock 10 cm(6)"
 }
 DEF obs3 Rock10cm {
-  translation -0.0290082 0.05 -0.433378
+  translation -0.0982906 0.05 -0.473378
   rotation 0 1 0 2.618
   name "rock 10 cm(7)"
 }
 DEF obs4 Rock10cm {
-  translation 0.147471 0.05 -0.324343
+  translation 0.167745 0.05 -0.435401
   rotation 0 1 0 2.35619
 }
 DEF obs5 Rock10cm {
-  translation 0.136375 0.05 -0.216277
+  translation 0.171051 0.05 -0.309947
   name "rock 10 cm(3)"
 }
 DEF obs6 Rock10cm {
-  translation 0.122134 0.05 -0.103535
+  translation 0.184923 0.05 -0.183473
   rotation 0 1 0 0.523599
   name "rock 10 cm(1)"
 }
 DEF obs7 Rock10cm {
-  translation -0.101076 0.05 -0.222749
+  translation -0.188343 0.05 -0.231461
   name "rock 10 cm(2)"
 }
 DEF agent_1 Rovable {
-  translation -0.229753 0.011 0.031428
+  translation 0.354331 0.011 -0.0476801
   rotation -0.5773509358554485 0.5773489358556708 0.5773509358554485 2.0944
   controller "single_agent"
+  controllerArgs [
+    "1"
+  ]
+  extensionSlot [
+    InertialUnit {
+    }
+    GPS {
+    }
+    Compass {
+      rotation 0.577349935856137 -0.577349935856137 -0.5773509358560258 2.0944
+    }
+  ]
+}
+DEF agent_2 Rovable {
+  translation -0.00749084 0.011 0.0894951
+  rotation -0.3779658663359857 0.6546527684883087 0.6546537684879549 2.41886
+  name "Rovable(1)"
+  controller "single_agent"
+  controllerArgs [
+    "2"
+  ]
   extensionSlot [
     InertialUnit {
     }
@@ -96,8 +118,8 @@ Robot {
       ]
       name "ground_display"
       boundingObject USE SHAPE
-      width 128
-      height 128
+      width 480
+      height 480
     }
   ]
   controller "display_controller"

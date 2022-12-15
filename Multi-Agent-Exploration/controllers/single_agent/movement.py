@@ -4,15 +4,18 @@ import numpy as np
 
 
 class Movement:
-    def __init__(self, robot, motorL, motorR, compass, gyro, imu):
+    def __init__(self, robot, robot_node, motorL, motorR, compass, gyro, imu, lDist, rDist):
         self.robot = robot
+        self.robot_node = robot_node
         self.motorL = motorL
         self.motorR = motorR
         self.compass = compass
         self.gyro = gyro
         self.imu = imu 
-        #DEFINED CONSTANTS
-
+        self.lDist = lDist
+        self.rDist = rDist
+    
+    #DEFINED CONSTANTS
     COORDINATE_MATCHING_ACCURACY = 0.01
     THETA_MATCHING_ACCURACY = 5
     # ANGULAR SPEED IN RADIANS 1.3
@@ -21,6 +24,7 @@ class Movement:
     #Linear velocity 0.0549999930
     TANGENSIAL_SPEED = 0.054999784124110815
     MAX_SPEED = 10
+    CLOSE_DISTANCE = 60
 
     def motorStop(self):
         self.motorL.setVelocity(0)
@@ -50,11 +54,18 @@ class Movement:
         start_time = self.robot.getTime()
         while True:
             if (self.robot.getTime() >= start_time + duration):
-                break
+                self.motorStop()
+                self.robot.step(8)
+                trans_field = self.robot_node.getField("translation")
+                position = trans_field.getSFVec3f()
+                return position
+            if (self.lDist.getValue() < self.CLOSE_DISTANCE or self.rDist.getValue() < self.CLOSE_DISTANCE):
+                self.motorStop()
+                self.robot.step(8)
+                trans_field = self.robot_node.getField("translation")
+                position = trans_field.getSFVec3f()
+                return position
             self.robot.step(8)
-        #stop the motor
-        self.motorStop()
-        self.robot.step(8)
 
     def rotateHeading(self, thetaDot):
         if not (self.cartesianIsThetaEqual(thetaDot, 0)):
@@ -81,7 +92,9 @@ class Movement:
 
     #motorR.setPosition(0.1)
 
-    def positioningControllerGetRobotCoordinate(self, translation_array):
+    def positioningControllerGetRobotCoordinate(self):
+        trans_field = self.robot_node.getField("translation")
+        translation_array = trans_field.getSFVec3f()
         position = np.zeros(2)
         position[0] = (translation_array[0])
         position[1] = -(translation_array[2])
@@ -179,12 +192,12 @@ class Movement:
 
     def positioningControllerCalcDistanceToDestination(self, destinationCoordinate, curr_pos):
 
-        currentCoordinate = self.positioningControllerGetRobotCoordinate(curr_pos)
+        currentCoordinate = self.positioningControllerGetRobotCoordinate()
         return self.cartesianCalcDistance(currentCoordinate, destinationCoordinate)
 
     def positioningControllerCalcThetaDotToDestination(self, destinationCoordinate, curr_pos):
 
-        currentCoordinate = self.positioningControllerGetRobotCoordinate(curr_pos)
+        currentCoordinate = self.positioningControllerGetRobotCoordinate()
         robotHeading = self.get_heading()
         # print("Robot Heading: ", robotHeading)
         destinationTheta = self.cartesianCalcDestinationThetaInDegrees(currentCoordinate, destinationCoordinate)
@@ -203,12 +216,12 @@ class Movement:
         destinationCoordinate = destinationCartesian
         
 
-        currentCoordinate = self.positioningControllerGetRobotCoordinate(curr_pos)
+        currentCoordinate = self.positioningControllerGetRobotCoordinate()
         # print("Initial Coordinate:", currentCoordinate)
         # print("Destination Coordinate: ", destinationCoordinate)
         
         # if the robot is already at the destination location
-        if (self.cartesianIsCoordinateEqual(self.positioningControllerGetRobotCoordinate(curr_pos), destinationCoordinate)):
+        if (self.cartesianIsCoordinateEqual(self.positioningControllerGetRobotCoordinate(), destinationCoordinate)):
                 print("Robot is already at the destination location\n")
                 return
             
@@ -224,10 +237,12 @@ class Movement:
         distanceToDestination = self.positioningControllerCalcDistanceToDestination(destinationCoordinate, curr_pos)
         # print("distanceToDestination: %.5f\n", distanceToDestination)
         
-        self.moveForward(distanceToDestination)
+        final_destination = self.moveForward(distanceToDestination)
         
         # currentCoordinate = self.positioningControllerGetRobotCoordinate(curr_pos)
         # print("Final Coordinate:", currentCoordinate)
 
         self.rotateHeading(-thetaDotToDestination)
         #print("Stop Coordinate: %.5f %.5f\n", currentCoordinate[0], currentCoordinate[1])
+
+        return final_destination
